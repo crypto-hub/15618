@@ -2,16 +2,16 @@
 
 ### Updated schedule
 
-- 4/25 - 5/1: 
-- Implement basic version of in-memory hashmap using cuckoo hashing for a single node.
-- Implement optimistic concurrent cuckoo hashmap using key-version counter.
++ 4/25 - 5/1: 
+  - Implement basic version of in-memory hashmap using cuckoo hashing for a single node.
+  - Implement optimistic concurrent cuckoo hashmap using key-version counter.
 
-- 5/2 - 5/8: 
-- Complete and optimise in-memory hashmap using cuckoo hashing for a single node.
-- Scale this hashtable in distributed environment (Hope to achieve) 
++ 5/2 - 5/8: 
+  - Complete and optimise in-memory hashmap using cuckoo hashing for a single node.
+  - Scale this hashtable in distributed environment (Hope to achieve) 
 
-- 5/9 - 5/11: 
-- Final optimisation and report preparation.
++ 5/9 - 5/11: 
+  - Final optimisation and report preparation.
 
 
 ### Work completed so far
