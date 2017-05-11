@@ -127,9 +127,10 @@ We developed and tested our implementation on Latedays cluster, which consists o
 
 We analyzed various hash table approaches both for single threaded and multi-threaded scenarios. Following figures demonstrate how various factors contribute towards the read throughput performance. We concluded cuckoo hash table with optimistic locking mechanism and tag byte gives the best performance for read heavy workloads. In subsequent sections we will analyze each of performance optimization in depth.
 <p align="center">
-<img src="multi_factor_analysis.png" width="600">
-
-<img src="single_factor_analysis.png" width="600">
+<img src="multi_factor_analysis.png" width="720">
+<br>
+<br>
+<img src="single_factor_analysis.png" width="720">
 </p>
 
 ### Optimistic Locking Mechanism
@@ -144,7 +145,8 @@ Introduction of tag significantly boost the throughput of the hash table, both f
 
 <p align="center">
 <img src="multi_tag1.png" width="600">
-
+<br>
+<br>
 <img src="multi_tag2.png" width="600">
 </p>
 
