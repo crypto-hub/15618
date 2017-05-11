@@ -196,10 +196,10 @@ In lookup phase, when each key maps to 8 slots, the use of SIMD semantics in OMP
 
 ## References
 [1] https://www.cs.cmu.edu/~dga/papers/memc3-nsdi2013.pdf <br>
-[2] https://www.cs.princeton.edu/~mfreed/docs/cuckoo-eurosys14.pdf
-[3] N. Gunther, S. Subramanyam, and S. Parvu. Hidden scalability gotchas in memcached and friends. In VELOCITY Web Performance and Operations Conference, June 2010
-[4] B. Atikoglu, Y. Xu, E. Frachtenberg, S. Jiang, and M. Paleczny. Workload analysis of a large-scale key-value store. In Proceedings of the SIGMETRICS’12, 2012.
-[5] R. Pagh and F. Rodler. Cuckoo hashing. Journal of Algorithms, 51(2):122–144, May 2004.
+[2] https://www.cs.princeton.edu/~mfreed/docs/cuckoo-eurosys14.pdf <br>
+[3] N. Gunther, S. Subramanyam, and S. Parvu. Hidden scalability gotchas in memcached and friends. In VELOCITY Web Performance and Operations Conference, June 2010 <br>
+[4] B. Atikoglu, Y. Xu, E. Frachtenberg, S. Jiang, and M. Paleczny. Workload analysis of a large-scale key-value store. In Proceedings of the SIGMETRICS’12, 2012. <br>
+[5] R. Pagh and F. Rodler. Cuckoo hashing. Journal of Algorithms, 51(2):122–144, May 2004. <br>
 
 ## Work By Each Student
 Equal work was performed by both project members.
