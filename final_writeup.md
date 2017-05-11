@@ -32,6 +32,7 @@ We implemented two kinds of locking mechanism for cuckoo hash table. One is per 
 Introduction of tag significantly boost the throughput of the hash table, both for read only as well as read-write work load, as illustrated in the figure. The main reason for this boost is cache locality. During lookup, it needs to check for the key in all the slots of both buckets. First of all, the 1-byte tag eliminates the need for fetching complete variable length key from memory for most slot checks, except when there is tag hit. As the cache size is only 1 byte, as compared to variable length key, it makes sure that complete bucket fits in a single cache line. Similarly, it helps during path search phase of insertion. Using the tag which resides in cache, instead of complete key which may reside in memory, for finding the next bucket, significantly speedup the insertion.
 
 <img src="multi_tag1.png" width="700">
+
 <img src="multi_tag2.png" width="700">
 
 ### Space Efficiency
@@ -59,7 +60,7 @@ As number of threads increases, throughput in case of read only as read-write wo
 
 We incorporated improvements mentioned in MemC3 by Fan et al [1], and we were able to achieve similar performance numbers, as reported in paper. As mentioned in earlier section, we tested our implementation on similar configuration as mentioned in reference paper.
 
-<img src="comparison_with_fen.png" width="700">
+ <img src="comparison_with_fen.png" width="700">
 
 
 ## References
