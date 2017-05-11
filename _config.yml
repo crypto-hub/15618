@@ -3,4 +3,5 @@ description: A Distributed Concurrent In-memory Hashtable
 theme: jekyll-theme-cayman
 
 checkpoint_page: checkpoint-page
+final_writeup: final_writeup
 
