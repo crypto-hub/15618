@@ -118,7 +118,7 @@ There are mainly three issues due to concurrent access that we need to address.
 
 ## RESULTS
 
-We analyzed how various optimizations techniques contribute to the high throughput and space efficiency of our hash table’s implementation. We compared its performance with various other hash tables’ implementation, which selects different tradeoff point in design space. Finally, we compared our implementation’s performance with the performance results mentioned in reference paper [1].
+We analyzed how various optimizations techniques contribute to the high throughput and space efficiency of our hash table’s implementation. We compared its performance with various other hash tables’ implementations, which selects different tradeoff points in design space. Finally, we compared our implementation’s performance with the performance results mentioned in reference paper [1].
 
 ### Platform
 
@@ -126,7 +126,7 @@ We developed and tested our implementation on Latedays cluster, which consists o
 
 ### Overall Comparison of Various Hash Table Approaches
 
-We analyzed various hash table approaches both for single threaded and multi-threaded scenarios. Following figures demonstrate how various factors contribute towards the read throughput performance. We concluded cuckoo hash table with optimistic locking mechanism and tag byte gives the best performance for read heavy workloads. In subsequent sections we will analyze each of performance optimization in depth.
+We analyzed various hash table approaches both for single threaded and multi-threaded scenarios. Following figures demonstrate how various factors contribute towards the read throughput performance. We concluded cuckoo hash table with optimistic locking mechanism and tag byte gives the best performance for read heavy workloads. In subsequent sections we will analyze each of performance optimizations in depth.
 <p align="center">
 <img src="multi_factor_analysis.png" width="720">
 <br>
@@ -136,13 +136,13 @@ We analyzed various hash table approaches both for single threaded and multi-thr
 
 ### Optimistic Locking Mechanism
 
-We implemented two kinds of locking mechanism for cuckoo hash table. One is per bucket locking, whereas other is optimistic locking based on version counter. Optimistic locking performs significantly better than bucket based locking. It also beats chaining based hash table with coarse grain as well as fine grain locking by a big margin. As in optimistic locking, there is no need to take any kind of locks, it allows multiple concurrent reads and reduces significant overhead associated with locking. As it is meant for read heavy workload, the overhead associated with read retries during read-write conflict, doesn’t hurt much overall throughput.
+We implemented two kinds of locking mechanism for cuckoo hash table. One is per bucket locking, whereas other is optimistic locking based on version counter. Optimistic locking performs significantly better than bucket based locking. It also beats chaining based hash table with coarse grain as well as fine grain locking by a big margin. As in optimistic locking, there is no need to take any kind of locks, it allows multiple concurrent reads and reduces significant overhead associated with locking. As this hashing scheme is designed for read heavy workload, the overhead associated with read retries during read-write conflict, doesn’t hurt overall throughput much.
 <p align="center">
 <img src="multi_locking.png" width="600">
 </p>
 ### Cache Locality Improvement Using Tag
 
-Introduction of tag significantly boost the throughput of the hash table, both for read only as well as read-write work load, as illustrated in the figure. The main reason for this boost is cache locality. During lookup, it needs to check for the key in all the slots of both buckets. First of all, the 1-byte tag eliminates the need for fetching complete variable length key from memory for most slot checks, except when there is tag hit. As the cache size is only 1 byte, as compared to variable length key, it makes sure that complete bucket fits in a single cache line. Similarly, it helps during path search phase of insertion. Using the tag which resides in cache, instead of complete key which may reside in memory, for finding the next bucket, significantly speedup the insertion.
+Introduction of tag significantly boosts the throughput of the hash table, both for read only as well as read-write work load, as illustrated in the following figure. The main reason for this boost is cache locality. During lookup, it needs to check for the key in all the slots of both buckets. First of all, the 1-byte tag eliminates the need for fetching complete variable length key from memory for most slot checks, except when there is a tag hit. As the tag size is only 1 byte, as compared to variable length key, it makes sure that complete bucket fits in a single cache line. Similarly, it helps during path search phase of insertion. Using the tag which resides in cache significantly speeds up the insertion instead of using complete key (which may reside in memory) for finding the next bucket.
 
 <p align="center">
 <img src="multi_tag1.png" width="600">
@@ -159,19 +159,19 @@ Following cache-miss statistics were obtained for an implementation of optimisti
 
 ### Space Efficiency
 
-Our cuckoo hash table was able to achieve as high occupancy as ~95%, without compromising on O (1) worst case lookup. Each key can be mapped to 2 buckets, each having 4 slots. Cuckoo path length of 500 was used as an upper bound on no. of consecutive displacements in search for an empty slot for insert, before declaring it as unsuccessful insert. 
+Our cuckoo hash table was able to achieve as high occupancy as ~95%, without compromising on O(1) worst case lookup. Each key can be mapped to 2 buckets, each bucket having 4 slots. Cuckoo path length of 500 was used as an upper bound on no. of consecutive displacements in search for an empty slot for insert, before declaring it as unsuccessful insert. 
 
 Also, as compared to chaining based hash table, it has lower overhead for bookkeeping information. Hash table with chaining needs to store 4 or 8-bytes pointer, based on machine type, to the next item in the bucket. On the other hand, cuckoo hash table just needs to store 1-byte tag for faster lookup and inserts.
 
 ### Analysis of Write Heavy Workload
 
-As load factor increases, the length of cuckoo path to find an empty slot increases. Therefore, insertion time gradually increases on average, with increase in occupancy of hash table. As a result, overall throughput, i.e. requests per sec, decreases with increase in percentage of write request in load, as illustrated in figure. However, as optimistic cuckoo hashing is targeted towards read heavy workload, this trade-off doesn’t hurt its performance goal significantly.
+As load factor increases, the length of cuckoo path to find an empty slot increases. Therefore, insertion time gradually increases on average, with increase in occupancy of hash table. As a result, overall throughput, i.e. requests per sec, decreases with increase in percentage of write request in load, as illustrated in figure. However, since the optimistic cuckoo hashing is targeted towards read heavy workload, this trade-off doesn’t hurt its performance goals.
 <p align="center">
 <img src="througput_vs_write.png" width="600">
 </p>
 ### Scalability and Threads
 
-As number of threads increases, throughput in case of read only as read-write workload increases. As there is no lock involved in optimistic cuckoo hashing, it doesn’t suffer from issue of lock contention. For chaining based hash table with coarse grain as well as fine grain locking, throughput doesn’t increase with no. of threads. This is because operations are serialized and there is significant issue of lock contention. 
+As number of threads increases, throughput in case of both read-only and read-write workload increases. As there is no lock involved in optimistic cuckoo hashing, it doesn’t suffer from the issue of lock contention. In case of chaining based hash table with coarse grain and fine grain locking, throughput doesn’t increase with no. of threads. This is mainly because operations are serialized and there is significant issue of lock contention. 
 
 <p align="center">
 <img src="thread_vs_thr.png" width="600">
@@ -179,7 +179,7 @@ As number of threads increases, throughput in case of read only as read-write wo
 
 ### Comparison with Reference Paper
 
-We incorporated improvements mentioned in MemC3 by Fan et al [1], and we were able to achieve similar performance numbers, as reported in paper. As mentioned in earlier section, we tested our implementation on similar configuration as mentioned in reference paper.
+We incorporated improvements mentioned in MemC3 by Fan et al [1], and we were able to achieve similar performance numbers, as reported in paper. As mentioned in earlier section, we tested our implementation on similar configuration as mentioned in the reference paper.
 
 <p align="center">
 <img src="comparison_with_fen.png" width="600">
@@ -188,7 +188,7 @@ We incorporated improvements mentioned in MemC3 by Fan et al [1], and we were ab
 ## Future Work
 
 ### Multiple path search
-In the search phase of insert, we could construct multiple cuckoo paths in parallel. At each step, multiple victim keys are evicted and each key extending its own cukoo path. The search phase concludes when an empty slot it found in any of the paths. This has mainly two advantages : 1) Insert can find an emprty slot earlier which ultimately improves the throughput. 2) Insert can succeed before exceeding maximum number of displacements.
+In the search phase of insert, we can construct multiple cuckoo paths in parallel. At each step, multiple victim keys can be evicted and each key extends its own cukoo path. The search phase concludes when an empty slot it found in any of these paths. This has mainly two advantages : 1) Insert can find an emprty slot earlier, which ultimately improves the throughput. 2) Insert can succeed before exceeding maximum number of displacements.
 ### Using SIMD for parallel lookups 
 In lookup phase, when each key maps to 8 slots, the use of SIMD semantics in OMP can help us check these 8 slots in parallel.
 
