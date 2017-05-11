@@ -33,7 +33,7 @@ We implemented concurrent in-memory hash table based on optimistic cuckoo hashin
 
 
 ### References
-[1] https://www.cs.cmu.edu/~dga/papers/memc3-nsdi2013.pdf
+[1] https://www.cs.cmu.edu/~dga/papers/memc3-nsdi2013.pdf <br>
 [2] https://www.cs.princeton.edu/~mfreed/docs/cuckoo-eurosys14.pdf
 
 ### Work By Each Student
