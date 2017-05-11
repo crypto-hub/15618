@@ -77,14 +77,16 @@ In this Insert, next bucket is obtained based on tag stored in the victim slot. 
 As a result, Insert operations never have to retrieve keys.
 
 In this method, buckets b1 and b2 for any key x can be computed as below: 
-
-b1 = HASH(x) // based on the entire key 
-
+<p align="center">
+b1 = HASH(x) // based on the entire key <br>
 b2 = b1 ⊕ HASH(tag) // based on b1 and tag of x
+</p>
 
 Hence, given a bucket b and tag,  alternate bucket for a key can be computed as:
 
+<p align="center">
 b’ = b ⊕ HASH(tag)
+</p>
 
 ### Concurrent Access:
 
