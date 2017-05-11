@@ -1,4 +1,4 @@
-## FINAL WRITEUP
+# FINAL WRITEUP
 
 ## SUMMARY
 
@@ -17,6 +17,7 @@ We developed and tested our implementation on Latedays cluster, which consists o
 We analyzed various hash table approaches both for single threaded and multi-threaded scenarios. Following figures demonstrate how various factors contribute towards the read throughput performance. We concluded cuckoo hash table with optimistic locking mechanism and tag byte gives the best performance for read heavy workloads. In subsequent sections we will analyze each of performance optimization in depth.
 
 <img src="multi_factor_analysis.png" width="700">
+
 <img src="single_factor_analysis.png" width="700">
 
 
@@ -39,7 +40,7 @@ Our cuckoo hash table was able to achieve as high occupancy as ~95%, without com
 
 Also, as compared to chaining based hash table, it has lower overhead for bookkeeping information. Hash table with chaining needs to store 4 or 8-bytes pointer, based on machine type, to the next item in the bucket. On the other hand, cuckoo hash table just needs to store 1-byte tag for faster lookup and inserts.
 
-### Analysis of write heavy workload
+### Analysis of Write Heavy Workload
 
 As load factor increases, the length of cuckoo path to find an empty slot increases. Therefore, insertion time gradually increases on average, with increase in occupancy of hash table. As a result, overall throughput, i.e. requests per sec, decreases with increase in percentage of write request in load, as illustrated in figure. However, as optimistic cuckoo hashing is targeted towards read heavy workload, this trade-off doesn’t hurt its performance goal significantly.
 
@@ -50,6 +51,7 @@ As load factor increases, the length of cuckoo path to find an empty slot increa
 As number of threads increases, throughput in case of read only as read-write workload increases. As there is no lock involved in optimistic cuckoo hashing, it doesn’t suffer from issue of lock contention. For chaining based hash table with coarse grain as well as fine grain locking, throughput doesn’t increase with no. of threads. This is because operations are serialized and there is significant issue of lock contention. 
 
 <img src="thread_vs_thr.png" width="700">
+
 <img src="read_througput.png" width="700">
 
 
