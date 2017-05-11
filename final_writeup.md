@@ -148,10 +148,14 @@ Introduction of tag significantly boost the throughput of the hash table, both f
 <img src="multi_tag1.png" width="700">
 
 <img src="multi_tag2.png" width="700">
-
-<img src="cache_misses.png" width="400">
-
 </p>
+
+Following cache-miss statistics were obtained for an implementation of optimistic cuckoo hashing with and without tags. Cache misses were measures using *perf* tool
+
+<p align="center">
+<img src="cache_misses.png" width="400">
+</p>
+
 ### Space Efficiency
 
 Our cuckoo hash table was able to achieve as high occupancy as ~95%, without compromising on O (1) worst case lookup. Each key can be mapped to 2 buckets, each having 4 slots. Cuckoo path length of 500 was used as an upper bound on no. of consecutive displacements in search for an empty slot for insert, before declaring it as unsuccessful insert. 
