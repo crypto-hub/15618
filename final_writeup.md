@@ -129,25 +129,25 @@ We developed and tested our implementation on Latedays cluster, which consists o
 
 We analyzed various hash table approaches both for single threaded and multi-threaded scenarios. Following figures demonstrate how various factors contribute towards the read throughput performance. We concluded cuckoo hash table with optimistic locking mechanism and tag byte gives the best performance for read heavy workloads. In subsequent sections we will analyze each of performance optimization in depth.
 <p align="center">
-<img src="multi_factor_analysis.png" width="700">
+<img src="multi_factor_analysis.png" width="600">
 
-<img src="single_factor_analysis.png" width="700">
+<img src="single_factor_analysis.png" width="600">
 </p>
 
 ### Optimistic Locking Mechanism
 
 We implemented two kinds of locking mechanism for cuckoo hash table. One is per bucket locking, whereas other is optimistic locking based on version counter. Optimistic locking performs significantly better than bucket based locking. It also beats chaining based hash table with coarse grain as well as fine grain locking by a big margin. As in optimistic locking, there is no need to take any kind of locks, it allows multiple concurrent reads and reduces significant overhead associated with locking. As it is meant for read heavy workload, the overhead associated with read retries during read-write conflict, doesn’t hurt much overall throughput.
 <p align="center">
-<img src="multi_locking.png" width="700">
+<img src="multi_locking.png" width="600">
 </p>
 ### Cache Locality Improvement Using Tag
 
 Introduction of tag significantly boost the throughput of the hash table, both for read only as well as read-write work load, as illustrated in the figure. The main reason for this boost is cache locality. During lookup, it needs to check for the key in all the slots of both buckets. First of all, the 1-byte tag eliminates the need for fetching complete variable length key from memory for most slot checks, except when there is tag hit. As the cache size is only 1 byte, as compared to variable length key, it makes sure that complete bucket fits in a single cache line. Similarly, it helps during path search phase of insertion. Using the tag which resides in cache, instead of complete key which may reside in memory, for finding the next bucket, significantly speedup the insertion.
 
 <p align="center">
-<img src="multi_tag1.png" width="700">
+<img src="multi_tag1.png" width="600">
 
-<img src="multi_tag2.png" width="700">
+<img src="multi_tag2.png" width="600">
 </p>
 
 Following cache-miss statistics were obtained for an implementation of optimistic cuckoo hashing with and without tags. Cache misses were measures using *perf* tool
@@ -166,14 +166,14 @@ Also, as compared to chaining based hash table, it has lower overhead for bookke
 
 As load factor increases, the length of cuckoo path to find an empty slot increases. Therefore, insertion time gradually increases on average, with increase in occupancy of hash table. As a result, overall throughput, i.e. requests per sec, decreases with increase in percentage of write request in load, as illustrated in figure. However, as optimistic cuckoo hashing is targeted towards read heavy workload, this trade-off doesn’t hurt its performance goal significantly.
 <p align="center">
-<img src="througput_vs_write.png" width="700">
+<img src="througput_vs_write.png" width="600">
 </p>
 ### Scalability and Threads
 
 As number of threads increases, throughput in case of read only as read-write workload increases. As there is no lock involved in optimistic cuckoo hashing, it doesn’t suffer from issue of lock contention. For chaining based hash table with coarse grain as well as fine grain locking, throughput doesn’t increase with no. of threads. This is because operations are serialized and there is significant issue of lock contention. 
 
 <p align="center">
-<img src="thread_vs_thr.png" width="700">
+<img src="thread_vs_thr.png" width="600">
 </p>
 
 ### Comparison with Reference Paper
@@ -181,7 +181,7 @@ As number of threads increases, throughput in case of read only as read-write wo
 We incorporated improvements mentioned in MemC3 by Fan et al [1], and we were able to achieve similar performance numbers, as reported in paper. As mentioned in earlier section, we tested our implementation on similar configuration as mentioned in reference paper.
 
 <p align="center">
-<img src="comparison_with_fen.png" width="700">
+<img src="comparison_with_fen.png" width="600">
 </p>
 
 ## References
