@@ -6,30 +6,30 @@ We implemented concurrent in-memory hash table based on optimistic cuckoo hashin
 
 
 ### Overview
-<img src="multi_factor_analysis.png" width="300">
-<img src="single_factor_analysis.png" width="300">
+<img src="multi_factor_analysis.png" width="500">
+<img src="single_factor_analysis.png" width="500">
 
 
 ### Comparison of Locking Mechanism
-<img src="multi_locking.png" width="300">
+<img src="multi_locking.png" width="500">
 
 
 ### Impact of Tag Usage
-<img src="multi_tag1.png" width="300">
-<img src="multi_tag2.png" width="300">
+<img src="multi_tag1.png" width="500">
+<img src="multi_tag2.png" width="500">
 
 ### No. of Threads vs Throughput
-<img src="thread_vs_thr.png" width="300">
+<img src="thread_vs_thr.png" width="500">
 
 ### Write Percentage vs Throughput
-<img src="througput_vs_write.png" width="300">
+<img src="througput_vs_write.png" width="500">
 
 ### Read Throughput : Single vs MultiThreading
-<img src="read_throughput.png" width="300">
+<img src="read_througput.png" width="500">
 
 
 ### Comparison with Reference Paper[1]
-<img src="comparison_with_fen.png" width="300">
+<img src="comparison_with_fen.png" width="500">
 
 
 ### References
