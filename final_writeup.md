@@ -180,8 +180,9 @@ As number of threads increases, throughput in case of read only as read-write wo
 
 We incorporated improvements mentioned in MemC3 by Fan et al [1], and we were able to achieve similar performance numbers, as reported in paper. As mentioned in earlier section, we tested our implementation on similar configuration as mentioned in reference paper.
 
- <img src="comparison_with_fen.png" width="700">
-
+<p align="center">
+<img src="comparison_with_fen.png" width="700">
+</p>
 
 ## References
 [1] https://www.cs.cmu.edu/~dga/papers/memc3-nsdi2013.pdf <br>
