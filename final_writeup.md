@@ -77,8 +77,8 @@ As a result, Insert operations never have to retrieve keys.
 
 In this method, buckets b1 and b2 for any key x can be computed as below: 
 <p align="center">
-b1 = HASH(x) // based on the entire key <br>
-b2 = b1 ⊕ HASH(tag) // based on b1 and tag of x
+b1 = HASH(x)  <br>
+b2 = b1 ⊕ HASH(tag) 
 </p>
 
 Hence, given a bucket b and tag,  alternate bucket for a key can be computed as:
