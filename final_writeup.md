@@ -120,7 +120,7 @@ There are mainly three issues due to concurrent access that we need to address.
 
 ## RESULTS
 
-We analyzed how various optimizations techniques contribute to the high throughput and space efficiency of our hash table’s implementation. We compared its performance with various other hash tables’ implementations, which selects different tradeoff points in design space. Finally, we compared our implementation’s performance with the performance results mentioned in reference paper [1].
+We analyzed how various optimization techniques contribute to the high throughput and space efficiency of our hash table’s implementation. We compared its performance with various other hash tables’ implementations, which selects different tradeoff points in design space. Finally, we compared our implementation’s performance with the performance results mentioned in reference paper [1].
 
 ### Platform
 
