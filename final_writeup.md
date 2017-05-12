@@ -138,9 +138,9 @@ Following combinations of hashing schemes were tested to get the different compa
 
 All combinations given above were tested with mainly three types of workloads. 
 
-1) Read-write interleaved with low load factor 
-2) Read-heavy with low load factor
-3) Read-heavy with high load factor
+1) Read-write interleaved with low load factor <br>
+2) Read-heavy with low load factor <br>
+3) Read-heavy with high load factor 
 
 Here, the load factor determines current occupany of the hashtable.
 
