@@ -40,6 +40,7 @@ Following are the steps for non-tag based hash table operations:
 
 **Lookup**:
 - As each key is mapped to two buckets, lookup checks all 8 possible slots for the key.
+- And for each slot, it makes a memory reference and then it is compared with given key.
 
 **Insert**:
 - For a key x, get two buckets b1 and b2. If any of the slot is empty in these buckets, simply insert the key in that slot. 
@@ -49,29 +50,30 @@ Following are the steps for non-tag based hash table operations:
 - Otherwise, repeat this procedure until we find an empty slot or until maximum no. of displacements are performed. The entire path of displacements is known as cuckoo path. 
 - Though it may execute a sequence of displacements, the expected insertion time of cuckoo hashing is O(1) [5].
 
-### Tag based insert/lookup : (making operations cache-friendly)
+### Cache Friendly Operations using Tag
 
-In lookup, while checking all 8 candidate slots, we need to make 8 memory references to compare keys. For insert, while performing displacements along a cuckoo path, we need to access entire key to get the alternate bucket (As the buckets are determined based on hash of keys). This paper suggests an alternative to make both inserts and lookups cache-friendly (hence memory references are minimised). 
+In previous approach, while checking all 8 candidate slots for a lookup, we need to make 8 memory dereferences to compare the keys. For insert, while performing displacements along a cuckoo path, we need to access entire key to get the alternate bucket, as the buckets are determined based on hash of keys. 
 
-In this technique, we do not store entire key in the hashtable but store just “one byte hash” of the key - called “tag” in the hashtable. Now each slot has one byte cache + 8 bytes for pointer (9 bytes). Each bucket has 4 slots, which is (9*4) = 36 bytes, therefore now entire bucket easily fits in a cacheline (assuming cahceline size of 64 bytes). The basic cuckoo hashing required 8 pointer dereferences for a lookup. 
+There is an alternative cache friendly approach using tag, where we store tag, one byte hash of the key, in hashtable. Now each slot has 1-byte tag + 8-byte pointer and each bucket has 4 slots. Therefore, each bucket can still fit in a single cache line of 64 bytes.
 
 Now lookups and inserts work in following manner.
  
 **Lookup**: 
 - Get the buckets b1 and b2 by hashing the key.
 - Calculate the tag of the key.
-- Check tags stored in 8 slots with this tag.
-- Check key only if tag matches. (Since tag collision is still possible)
+- Compare tags stored in these 8 slots with this calculated tag.
+- Compare the key by making memory dereference only if tag matches. (Since tag collision is still possible)
 <p align="center">
 <img src="tag_lookup.png" width="300">
 </p>
+
 **Insert**: 
 - Get bucket b1 and b2 for key.
 - Try to find an empty slot among these 8 slots
 - If none found, select a victim slot, start displacements until an empty slot is found.
 
-In this Insert, next bucket is obtained based on tag stored in the victim slot. This saves us one pointer dereference every time we find next victim slot (earlier finding next bucket required accessing key). 
-As a result, Insert operations never have to retrieve keys.
+In this approach of insertion, next bucket is calculated based on tag stored in the victim slot. This saves us one pointer dereference every time we find next victim slot, as compared to previous approach where finding next bucket requires a memory dereference for accessing key. 
+As a result, insert operations never have to retrieve keys.
 
 In this method, buckets b1 and b2 for any key x can be computed as below: 
 <p align="center">
@@ -90,15 +92,17 @@ b’ = b ⊕ HASH(tag)
 There are mainly three issues due to concurrent access that we need to address.
 * Deadlock risk due to multiple writers (during displacements along the cuckoo path)
   - Avoided by allowing only single writer at a time
+  
 * False misses: 
   - Suppose during insert for key x, no empty slot was found. A victim slot y was selected.
   - Now we get alternate bucket z for y.
   - We replace y with x and then z with y.
-  - But, after replacing y with x, and before putting y in z, key y is not present in the hashtable, hence giving a false miss to a lookup for y.
+  - But, after replacing y with x, and before putting y in z, key y was not present in the hashtable, hence giving a false miss to a lookup for y.
   - This problem is solved by separating search and displacement phase. 
      - First we get the entire cuckoo path without performing any replacements.
      - In second phase, we start atomic swaps from the end. 
      - This way, all keys in the cuckoo path are always present in the hashtable and false misses can be avoided.
+     
 * Optimistic Locking:
   - There is still a possibility of race condition between readers and and a single writer (writer’s displacement phase can move the keys being read by a reader).
   - To avoid using locks, we use version counters. Each key maps to a specific index in the version counter array. More than one keys can map to same index in the version counter array.
