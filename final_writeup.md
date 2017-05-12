@@ -144,7 +144,7 @@ All combinations given above were tested with mainly three types of workloads.
 
 Here, the load factor determines current occupany of the hashtable.
 
-Size of the Hash table size = ~ ***4 MB*** keys
+Size of the Hash table size = ~ ***4 MB*** keys <br>
 Size of version-counter array for cuckoo hash = ***8 KB***
 
 
