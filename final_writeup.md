@@ -126,6 +126,29 @@ We analyzed how various optimization techniques contribute to the high throughpu
 
 We developed and tested our implementation on Latedays cluster, which consists of Intel Xeon CPU E5-2620 v3 @ 2.40GHz, with 15 MB cache. This configuration is quite similar to the ones which were used for experiments in reference paper, which had Intel Xeon L5640 @ 2.27GHz, with 12 MB cache.
 
+### Testing Framework
+
+#### Hashing schemes 
+Following combinations of hashing schemes were tested to get the different comparisons.
+<p align="center">
+<img src="test_base.jpg" width="620">
+</p>
+
+#### Workload
+
+All combinations given above were tested with mainly three types of workloads. 
+
+1) Read-write interleaved with low load factor 
+2) Read-heavy with low load factor
+3) Read-heavy with high load factor
+
+Here, the load factor determines current occupany of the hashtable.
+
+Size of the Hash table size = ~ ***4 MB*** keys
+Size of version-counter array for cuckoo hash = ***8 KB***
+
+
+
 ### Overall Comparison of Various Hash Table Approaches
 
 We analyzed various hash table approaches both for single threaded and multi-threaded scenarios. Following figures demonstrate how various factors contribute towards the read throughput performance. We concluded cuckoo hash table with optimistic locking mechanism and tag byte gives the best performance for read heavy workloads. In subsequent sections we will analyze each of performance optimizations in depth.
