@@ -9,7 +9,7 @@ Hash Table is a widely used data structure. In any efficient hashing scheme, col
 
 There are multiple applications like MemC3[1] which have have dominant read-only workload with rarely occurring writes. In these applications, to support multi-threading, locks are heavily used as writers can be present in the system (rare, but still possible). Hence, though most queries are reads, they get major performance hit due to overhead associated with locks. 
 
-The approach described in Fan et al.[1] tries to optimise for the common case, by removing all the mutexes and assuming that read-write conflict will rarely occur. It replaces mutexes with an optimistic locking scheme to resolve the conflicts. It also adds other optimisations to make lookups faster and more cache-friendly (using tags). 
+The approach described in Fan et al.[1] tries to optimise for the common case, by removing all the mutexes and assuming that read-write conflict will rarely occur. It replaces mutexes with an optimistic locking scheme to resolve the conflicts. It also adds other optimisations to make lookups faster and more cache-friendly. 
 
 To implement optimistic hashing scheme, it uses cuckoo hashing - an advanced hashing scheme with high memory efficiency and O(1) expected insertion time and lookup. The basic idea of cuckoo hashing is to use two hash functions instead of one, thus providing each key two possible locations where it can reside. Cuckoo hashing can dynamically relocate existing keys and refine the table to make room for new keys during insertion[1]. 
 
@@ -17,19 +17,17 @@ Unfortunately, there are some fundamental limitations in making cuckoo hashing p
 
 
 ## APPROACH
-To implement optimistic and concurrent hashing scheme, we add following features to overcome basic cuckoo hashing limitations. These features also make hashing scheme memory-efficient and cache-friendly. 
 
-Optimizations added to cuckoo hashing:
-- Specific hash table structure (cacheline-friendly) and optimistic version of cuckoo hashing to support multiple-reader/single writer concurrent access while preserving space benefits.
-- This scheme includes: 
-  - A technique using a short summary of each key (called "tag") to improve the cache locality of hash table operations   
-  - An optimization for cuckoo hashing insertion that improves throughput (by avoiding locking).
+To implement concurrent hash table with high space efficiency and high read throughput, we added following features to basic cuckoo hashing, to overcome its limitations:
 
-As shown in results, this hashing scheme provides significant performance boost and solid space efficiency. 
-
-A single lookup in a naive cuckoo hashing requires two parallel bucket reads followed by (up to) 2N (in worst case) parallel memory references if each bucket has N keys. Hashing using chaining requires up to N **dependent** (which can’t be done in parallel) memory references for a bucket having N keys. 
-
-In this scheme, each lookup requires only two parallel cacheline reads followed by (up to) one memory reference on average. This approach gives a significant performance edge to read-heavy workloads.
+- Making hash table structure cache friendly by using tag
+  - Tag is a single byte summary of the key which improves cache locality during hash table operations.
+  - Boosts throughput by reducing cache misses and memory references.
+- Optimistic Locking using Version Counter
+  - Maintains version counter which supports concurrent access by multiple readers and single writer.
+  - Improves throughput by avoiding locking overhead.
+ 
+Hashing using chaining requires up to N **dependent** (non-parallelizable) memory references for a bucket having N keys. A single lookup in a naive cuckoo hashing requires two parallel bucket reads followed by up to 2N parallel memory references if each bucket has N keys. However, in the above described scheme, each lookup requires only two parallel cacheline reads followed by upto one memory reference on average. This approach gives a significant performance edge to read-heavy workloads.
 
 ### Hash table structure
 
