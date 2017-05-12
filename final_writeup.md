@@ -31,20 +31,22 @@ Hashing using chaining requires up to N **dependent** (non-parallelizable) memor
 
 ### Hash table structure
 
-Our hashtable’s unit structure is a slot. Each slot contains a ‘tag’ (short summary of the key, benefits of this explained in next subsection) and a pointer to key value object. Each bucket contains 4 of these slots and our hashtable is an array of these buckets.  Each key is mapped to two random buckets.
+Our hashtable’s unit structure is a slot. Each slot contains a tag, short summary of the key and a pointer to key value object. Each bucket is 4-way set associative and hashtable is an array of these buckets. Each key is mapped to two random buckets of the hashtable. There is an array for key version ounters, which is used for optimistic locking.
 <p align="center">
 <img src="cuckoo_hashing.png" width="400">
 </p>
 
-**Lookup**:
+Following are the steps for non-tag based hash table operations:
 
-- As each key is mapped to two random buckets,  Lookup checks all 8 candidate keys from every slot.
+**Lookup**:
+- As each key is mapped to two buckets, lookup checks all 8 possible slots for the key.
 
 **Insert**:
-- For a key x, get two buckets b1 and b2. If any slot is empty in these buckets, simply insert the key in that slot. 
-- If no empty slot is found, then we randomly select a victim slot out of these 8 slots.
-- Displace this victim slot’s key to its alternate bucket. If an empty slot is found in that bucket, simply insert the key and     displacement stops. 
-- Otherwise, repeat this procedure till we find an empty slot or until a maximum displacements are performed. The entire path of displacements is called a cuckoo path. 
+- For a key x, get two buckets b1 and b2. If any of the slot is empty in these buckets, simply insert the key in that slot. 
+- If no empty slot is found, then it randomly selects a victim slot out of these 8 slots.
+- Displaces the victim slot’s key to its alternate bucket. 
+- If an empty slot is found in that bucket, simply insert the key and displacement stops. 
+- Otherwise, repeat this procedure until we find an empty slot or until maximum no. of displacements are performed. The entire path of displacements is known as cuckoo path. 
 - Though it may execute a sequence of displacements, the expected insertion time of cuckoo hashing is O(1) [5].
 
 ### Tag based insert/lookup : (making operations cache-friendly)
