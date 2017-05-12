@@ -5,15 +5,15 @@ We implemented a concurrent in-memory hash table based on optimistic cuckoo hash
 
 ## BACKGROUND
 
-Hash Table is a widely used data structure. In any efficient hashing scheme, collisions are frequent and chaining is the most common method to resolve the collisions. Chaining is efficient for insertions and deletions, however, lookup can be quite expensive as it might require traversal of the entire linked list of a bucket. In addition, locking, whether it's coarse-grained or fine-grained, can add significant overhead to chanining in multi-threading settings. Even when fine-grained locking is used with chaining, obtaining locks is still a major overhead as it is highly likely that several distinct keys can map to the same bucket. 
+Hash Table is a widely used data structure. In any efficient hashing scheme, collisions are frequent and chaining is the most common method to resolve the collisions. Chaining is efficient for insertions and deletions, however, lookup can be quite expensive as it might require traversal of the entire linked list of a bucket. In addition, locking, whether it's coarse-grained or fine-grained, can add significant overhead to chanining in case of multi-threading. Even when fine-grained locking is used with chaining, obtaining locks is still a major overhead as it is highly likely that several distinct keys can map to the same bucket. 
 
 There are multiple applications like MemC3[1] which have have dominant read-only workload with rarely occurring writes. In these applications, to support multi-threading, locks are heavily used as writers can be present in the system (rare, but still possible). Hence, though most queries are reads, they get major performance hit due to overhead associated with locks. 
 
-The approach described in Fan et al.[1] tries to optimise for the common case, which removes all the mutexes and assumes that read-write conflict will rarely occur. It replaces mutexes with an optimistic locking scheme to resolve the conflicts. It also adds other optimisations to make lookups faster and more cache-friendly (using tags). 
+The approach described in Fan et al.[1] tries to optimise for the common case, by removing all the mutexes and assuming that read-write conflict will rarely occur. It replaces mutexes with an optimistic locking scheme to resolve the conflicts. It also adds other optimisations to make lookups faster and more cache-friendly (using tags). 
 
 To implement optimistic hashing scheme, it uses cuckoo hashing - an advanced hashing scheme with high memory efficiency and O(1) expected insertion time and lookup. The basic idea of cuckoo hashing is to use two hash functions instead of one, thus providing each key two possible locations where it can reside. Cuckoo hashing can dynamically relocate existing keys and refine the table to make room for new keys during insertion[1]. 
 
-Unfortunately, there are some fundamental limitations in making cuckoo hashing parallel. It does not support concurrent read/write access by default. Also, it requires multiple memory references for each insertion and lookup. The hashing scheme described in the paper supports concurrent access while still maintaining the high space efficiency of cuckoo hashing.
+Unfortunately, there are some fundamental limitations in making cuckoo hashing parallel. It does not support concurrent read/write access by default. Also, it requires multiple memory references for each insertion and lookup. The hashing scheme described in above mentioned paper supports concurrent access while still maintaining the high space efficiency of cuckoo hashing.
 
 
 ## APPROACH
